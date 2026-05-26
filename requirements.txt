@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+pypdf
+langchain-text-splitters
+numpy
+sentence-transformers
+langchain-core
+pydantic-core
+torch
+pinecone
+pydantic-settings
+python-dotenv
+

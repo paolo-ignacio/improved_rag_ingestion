@@ -1,0 +1,1 @@
+# API endpoints for file uploads and status checks
