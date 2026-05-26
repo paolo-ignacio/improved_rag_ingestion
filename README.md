@@ -26,7 +26,7 @@ flowchart LR
 	H --> I[Update job status: completed]
 	D --> J{Any error?}
 	J -->|Yes| K[Update job status: failed + detail]
-	I --> L[Frontend polls /api/v1/ingestion/status/{job_id}]
+	I --> L["Frontend polls /api/v1/ingestion/status/{job_id}"]
 	K --> L
 ```
 
