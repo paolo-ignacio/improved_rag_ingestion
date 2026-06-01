@@ -26,7 +26,7 @@ flowchart LR
 	H --> I[Update job status: completed]
 	D --> J{Any error?}
 	J -->|Yes| K[Update job status: failed + detail]
-	I --> L["Frontend polls /api/v1/ingestion/status/job_id"]
+	I --> L[Frontend polls /api/v1/ingestion/status/job_id]
 	K --> L
 ```
 
@@ -118,7 +118,6 @@ http://localhost:8000
 3. A background worker extracts and cleans text, splits it into chunks, generates embeddings, and uploads them to Pinecone.
 4. The worker updates the job to `completed` or `failed`.
 5. The frontend polls the status endpoint and updates each card automatically.
-
 
 ## Notes
 
