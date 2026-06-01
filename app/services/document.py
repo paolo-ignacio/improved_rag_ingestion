@@ -8,7 +8,6 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from .vector import VectorService
 import re
-# Configure logging to monitor background worker performance
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -19,8 +18,7 @@ def process_document_pipeline(job_id: Any, filename: str, file_bytes: bytes, db_
         logger.info(f"Starting async ingestion for Job {job_id} ({filename})")
         
         # Phase A: Text Extraction
-        # TODO: Implement PyPDF2/PdfReader or an OCR engine like Tesseract for scanned PDFs
-        # text = extract_text_from_bytes(file_bytes)
+
         pdf_stream = io.BytesIO(file_bytes)
 
         reader = PdfReader(pdf_stream)
@@ -35,8 +33,7 @@ def process_document_pipeline(job_id: Any, filename: str, file_bytes: bytes, db_
 
 
         # Phase B: Structural Chunking
-        # TODO: Implement LangChain's RecursiveCharacterTextSplitter or a semantic splitter
-        # chunks = split_text_into_chunks(text, chunk_size=1000, chunk_overlap=200)
+
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
@@ -47,10 +44,8 @@ def process_document_pipeline(job_id: Any, filename: str, file_bytes: bytes, db_
 
         splits = text_splitter.split_text(text)
         # Phase C: Embeddings Generation & Vector Store Upsert
-        # TODO: Call OpenAI/HuggingFace embeddings API and save array matrices to Pinecone
-        # vectors = generate_embeddings(chunks)
-        # pinecone_upsert(vectors, namespace=str(job_id))
         embeddings = vector_service.generate_embeddings(splits)
+        
         if vector_service.upsert_embeddings_to_pinecone(embeddings=embeddings, splits=splits, filename=filename):
             # Phase D: Success State
             db_ref[job_id]["status"] = "completed"

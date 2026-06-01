@@ -12,7 +12,6 @@ class VectorService:
         pc = Pinecone(api_key=settings.PINECONE_API_KEY)
         self.index = pc.Index(settings.PINECONE_INDEX_NAME)
 
-        # Remember to pass your actual model string here!
         self.model = SentenceTransformer('sentence-transformers/multi-qa-MiniLM-L6-dot-v1')
 
     def generate_embeddings(self, text_splits):
@@ -21,7 +20,6 @@ class VectorService:
         We keep it as a NumPy array here so .astype() works in the next step.
         """
         try:
-            # text_splits can be a single string or a list of strings
             embeddings = self.model.encode(text_splits, batch_size=32, show_progress_bar=False)
             return embeddings
         except Exception as e:
@@ -45,13 +43,11 @@ class VectorService:
                     "chunk_index": i,
                     "text": chunk,
                     "upload_time": upload_time,
-                    # Safely unpack file_metadata if it exists inside the passed metadata dict
                     **metadata.get("file_metadata", {}) 
                 }
                 
                 vectors.append({
                     "id": f"{filename}-{i}",
-                    # Efficiently cast the individual numpy array chunk and convert to list
                     "values": embedding.astype(np.float32).tolist(),
                     "metadata": flat_metadata
                 })
@@ -61,7 +57,6 @@ class VectorService:
             for i in range(0, len(vectors), batch_size):
                 batch = vectors[i:i + batch_size]
                 try:
-                    # Added 'self.' so it accesses the initialized pinecone index
                     self.index.upsert(vectors=batch)
                     print(f"[VECTOR_SERVICE] Successfully upserted batch {i//batch_size + 1}")
                 except Exception as e:
